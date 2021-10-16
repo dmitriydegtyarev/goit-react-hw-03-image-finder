@@ -1,11 +1,12 @@
 import { Component } from 'react';
+import toast from 'react-hot-toast';
 
 import { ImageGalleryItem } from 'Components/ImageGalleryItem';
 import { fetchPictures } from 'services/fetchPictures';
 
 export class ImageGallery extends Component {
   state = {
-    images: null,
+    images: [],
     loading: false,
     page: 1,
     currentPage: null,
@@ -23,7 +24,14 @@ export class ImageGallery extends Component {
         .then(response => response.data)
         .then(data => data.hits)
         .then(images => this.setState({ images, status: 'resolved' }));
-      // .finally(console.log(this.state));
+    }
+
+    if (this.state.images.length === 0 && this.state.status === 'resolved') {
+      toast.error(
+        `Did not can  searched picture  on the search query "${nextSearchQuery}"`,
+      );
+
+      this.setState({ status: 'idle' });
     }
   }
 
@@ -45,9 +53,7 @@ export class ImageGallery extends Component {
     if (status === 'resolved') {
       return (
         <ul className="ImageGallery">
-          <li>
-            <ImageGalleryItem images={images} />
-          </li>
+          <ImageGalleryItem images={images} />
         </ul>
       );
     }

@@ -1,8 +1,6 @@
 import { Component } from 'react';
 import toast from 'react-hot-toast';
 
-const notify = () => toast.error('Enter search query.');
-
 export class Searchbar extends Component {
   state = {
     searchQuery: '',
@@ -16,7 +14,7 @@ export class Searchbar extends Component {
     event.preventDefault();
 
     if (this.state.searchQuery.trim() === '') {
-      notify();
+      toast.error('Enter search query.');
       return;
     }
 
