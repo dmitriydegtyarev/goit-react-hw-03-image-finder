@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 import { Container } from 'Components/Container';
 import { Searchbar } from 'Components/Searchbar';
@@ -23,6 +24,7 @@ export class App extends Component {
     return (
       <Container>
         <Searchbar onSubmit={this.handleFormSubmit} />
+        <Toaster />
       </Container>
     );
   }
