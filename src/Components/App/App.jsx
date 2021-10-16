@@ -3,16 +3,11 @@ import { Toaster } from 'react-hot-toast';
 
 import { Container } from 'Components/Container';
 import { Searchbar } from 'Components/Searchbar';
-
-import { fetchPictures } from 'services/fetchPictures';
-
-// idle, pending, rejected, resolved
+import { ImageGallery } from 'Components/ImageGallery';
 
 export class App extends Component {
   state = {
     searchQuery: '',
-    page: 1,
-    status: 'idle',
   };
 
   handleFormSubmit = searchQuery => {
@@ -20,14 +15,14 @@ export class App extends Component {
   };
 
   render() {
-    // const { searchQuery, page, status } = this.state;
+    const { searchQuery } = this.state;
+
     return (
       <Container>
         <Searchbar onSubmit={this.handleFormSubmit} />
+        <ImageGallery searchQuery={searchQuery} />
         <Toaster />
       </Container>
     );
   }
 }
-
-fetchPictures('ukraine', 1);

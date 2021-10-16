@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 
 const notify = () => toast.error('Enter search query.');
@@ -26,6 +25,7 @@ export class Searchbar extends Component {
   };
 
   render() {
+    const { searchQuery } = this.state;
     return (
       <header className="Searchbar">
         <form onSubmit={this.handleSubmit} className="SearchForm">
@@ -35,7 +35,7 @@ export class Searchbar extends Component {
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            value={this.state.searchQuery}
+            value={searchQuery}
             onChange={this.handleChange}
           />
 
@@ -47,7 +47,3 @@ export class Searchbar extends Component {
     );
   }
 }
-
-Searchbar.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
