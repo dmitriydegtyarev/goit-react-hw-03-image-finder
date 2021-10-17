@@ -1,6 +1,14 @@
 import { Component } from 'react';
 import toast from 'react-hot-toast';
 
+import {
+  SearchbarHeader,
+  SearchbarForm,
+  SearchbarButton,
+  SearchbarButtonLabel,
+  SearchbarFormInput,
+} from './Searchbar.styled';
+
 export class Searchbar extends Component {
   state = {
     searchQuery: '',
@@ -25,10 +33,9 @@ export class Searchbar extends Component {
   render() {
     const { searchQuery } = this.state;
     return (
-      <header className="Searchbar">
-        <form onSubmit={this.handleSubmit} className="SearchForm">
-          <input
-            className="SearchForm-input"
+      <SearchbarHeader>
+        <SearchbarForm onSubmit={this.handleSubmit}>
+          <SearchbarFormInput
             type="text"
             autoComplete="off"
             autoFocus
@@ -37,11 +44,11 @@ export class Searchbar extends Component {
             onChange={this.handleChange}
           />
 
-          <button type="submit" className="SearchForm-button">
-            <span className="SearchForm-button-label">Search</span>
-          </button>
-        </form>
-      </header>
+          <SearchbarButton type="submit">
+            <SearchbarButtonLabel>Search</SearchbarButtonLabel>
+          </SearchbarButton>
+        </SearchbarForm>
+      </SearchbarHeader>
     );
   }
 }

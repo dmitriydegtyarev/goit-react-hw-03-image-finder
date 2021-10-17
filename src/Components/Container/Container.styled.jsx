@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 
-import bgImage from 'images/backGround.png';
-
 export const Container = styled.div`
-  height: 100vh;
-  background-image: url(' ${bgImage} ');
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 16px;
+  padding-bottom: 24px;
 `;

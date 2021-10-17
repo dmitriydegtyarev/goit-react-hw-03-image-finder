@@ -1,3 +1,8 @@
+import {
+  ImageGalleryItemLi,
+  ImageGalleryItemImage,
+} from './ImageGalleryItem.styled';
+
 export const ImageGalleryItem = ({ images }) => {
   return (
     <>
@@ -5,9 +10,9 @@ export const ImageGalleryItem = ({ images }) => {
         images.map(image => {
           const { id, webformatURL, tags } = image;
           return (
-            <li className="ImageGalleryItem" key={id}>
-              <img src={webformatURL} alt={tags} />
-            </li>
+            <ImageGalleryItemLi key={id}>
+              <ImageGalleryItemImage src={webformatURL} alt={tags} />
+            </ImageGalleryItemLi>
           );
         })}
     </>

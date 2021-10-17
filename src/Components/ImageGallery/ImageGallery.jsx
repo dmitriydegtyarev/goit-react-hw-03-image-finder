@@ -5,6 +5,8 @@ import { ImageGalleryItem } from 'Components/ImageGalleryItem';
 import { Spinner } from 'Components/Loader';
 import { Button } from 'Components/Button';
 
+import { ImageGalleryList } from './ImageGallery.styled';
+
 import { fetchPictures } from 'services/fetchPictures';
 
 export class ImageGallery extends Component {
@@ -49,6 +51,10 @@ export class ImageGallery extends Component {
           })),
         );
     }
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
 
     if (this.state.images.length === 0 && this.state.status === 'resolved') {
       toast.error(
@@ -57,11 +63,6 @@ export class ImageGallery extends Component {
 
       this.setState({ status: 'idle' });
     }
-
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: 'smooth',
-    });
   }
 
   render() {
@@ -81,10 +82,12 @@ export class ImageGallery extends Component {
 
     if (status === 'resolved') {
       return (
-        <ul className="ImageGallery">
-          <ImageGalleryItem images={images} />
+        <>
+          <ImageGalleryList>
+            <ImageGalleryItem images={images} />
+          </ImageGalleryList>
           {images.length > 0 && <Button onClick={this.handleClickBtn} />}
-        </ul>
+        </>
       );
     }
   }
