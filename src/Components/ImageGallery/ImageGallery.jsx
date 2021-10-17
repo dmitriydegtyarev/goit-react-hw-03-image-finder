@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import toast from 'react-hot-toast';
 
+import { DefaultImage } from 'Components/ImageGalleryItem/DefaultImage';
 import { ImageGalleryItem } from 'Components/ImageGalleryItem';
 import { Spinner } from 'Components/Loader';
 import { Button } from 'Components/Button';
@@ -9,13 +10,14 @@ import { ImageGalleryList } from './ImageGallery.styled';
 
 import { fetchPictures } from 'services/fetchPictures';
 
+import data from 'data/defaultImage.json';
+
 export class ImageGallery extends Component {
   state = {
     images: [],
     page: 1,
     totalImages: null,
     loading: false,
-    noResult: false,
     status: 'idle',
     error: null,
   };
@@ -47,7 +49,7 @@ export class ImageGallery extends Component {
           if (images.length === 0) {
             this.setState({
               images,
-              status: 'resolved',
+              status: 'idle',
             });
             notify();
             return;
@@ -86,7 +88,13 @@ export class ImageGallery extends Component {
     const { status, images, loading } = this.state;
 
     if (status === 'idle') {
-      return <></>;
+      return (
+        <>
+          <ImageGalleryList>
+            <DefaultImage data={data} />
+          </ImageGalleryList>
+        </>
+      );
     }
 
     if (status === 'pending') {

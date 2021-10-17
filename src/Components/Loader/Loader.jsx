@@ -5,8 +5,8 @@ export const Spinner = () => {
     <Loader
       type="BallTriangle"
       color="#00BFFF"
-      height={300}
-      width={300}
+      height={600}
+      width={600}
       timeout={3000}
     />
   );
