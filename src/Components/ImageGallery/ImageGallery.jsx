@@ -2,15 +2,24 @@ import { Component } from 'react';
 import toast from 'react-hot-toast';
 
 import { ImageGalleryItem } from 'Components/ImageGalleryItem';
+import { Spinner } from 'Components/Loader';
+import { Button } from 'Components/Button';
+
 import { fetchPictures } from 'services/fetchPictures';
 
 export class ImageGallery extends Component {
   state = {
     images: [],
-    loading: false,
     page: 1,
-    currentPage: null,
+    totalImages: null,
     status: 'idle',
+    error: null,
+  };
+
+  handleClickBtn = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -18,12 +27,27 @@ export class ImageGallery extends Component {
     const nextSearchQuery = this.props.searchQuery;
 
     if (prevSearchQuery !== nextSearchQuery) {
-      this.setState({ status: 'pending' });
+      this.setState({ status: 'pending', page: 1 });
 
       fetchPictures(nextSearchQuery, this.state.page)
-        .then(response => response.data)
-        .then(data => data.hits)
+        .then(data => {
+          this.setState({ totalImages: data.totalHits });
+          return data.hits;
+        })
         .then(images => this.setState({ images, status: 'resolved' }));
+    }
+
+    if (this.state.page !== prevState.page) {
+      this.setState({ status: 'pending', page: prevState.page + 1 });
+
+      fetchPictures(nextSearchQuery, this.state.page)
+        .then(data => data.hits)
+        .then(newImages =>
+          this.setState(prevState => ({
+            images: [...prevState.images, ...newImages],
+            status: 'resolved',
+          })),
+        );
     }
 
     if (this.state.images.length === 0 && this.state.status === 'resolved') {
@@ -33,27 +57,33 @@ export class ImageGallery extends Component {
 
       this.setState({ status: 'idle' });
     }
+
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
   }
 
   render() {
     const { status, images } = this.state;
 
     if (status === 'idle') {
-      return <div></div>;
+      return <></>;
     }
 
     if (status === 'pending') {
-      return <div></div>;
+      return <Spinner />;
     }
 
     if (status === 'rejected') {
-      return <div></div>;
+      return <></>;
     }
 
     if (status === 'resolved') {
       return (
         <ul className="ImageGallery">
           <ImageGalleryItem images={images} />
+          {images.length > 0 && <Button onClick={this.handleClickBtn} />}
         </ul>
       );
     }
