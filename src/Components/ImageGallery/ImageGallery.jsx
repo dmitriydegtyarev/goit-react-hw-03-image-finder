@@ -14,6 +14,8 @@ export class ImageGallery extends Component {
     images: [],
     page: 1,
     totalImages: null,
+    loading: false,
+    noResult: false,
     status: 'idle',
     error: null,
   };
@@ -25,22 +27,44 @@ export class ImageGallery extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
+    const notify = () =>
+      toast.error(
+        `Did not can  searched picture  on the search query "${nextSearchQuery}"`,
+      );
+
     const prevSearchQuery = prevProps.searchQuery;
     const nextSearchQuery = this.props.searchQuery;
 
     if (prevSearchQuery !== nextSearchQuery) {
-      this.setState({ status: 'pending', page: 1 });
+      this.setState({ status: 'pending', page: 1, loading: false });
 
       fetchPictures(nextSearchQuery, this.state.page)
         .then(data => {
           this.setState({ totalImages: data.totalHits });
           return data.hits;
         })
-        .then(images => this.setState({ images, status: 'resolved' }));
+        .then(images => {
+          if (images.length === 0) {
+            this.setState({
+              images,
+              status: 'resolved',
+            });
+            notify();
+            return;
+          }
+          this.setState({ images, status: 'resolved', loading: true });
+        });
     }
 
-    if (this.state.page !== prevState.page) {
-      this.setState({ status: 'pending', page: prevState.page + 1 });
+    if (
+      this.state.page !== prevState.page &&
+      prevSearchQuery === nextSearchQuery
+    ) {
+      this.setState({ status: 'pending' });
+
+      if (this.state.totalImages / 12 <= this.state.page) {
+        this.setState({ loading: false });
+      }
 
       fetchPictures(nextSearchQuery, this.state.page)
         .then(data => data.hits)
@@ -51,22 +75,15 @@ export class ImageGallery extends Component {
           })),
         );
     }
+
     window.scrollTo({
       top: document.documentElement.scrollHeight,
       behavior: 'smooth',
     });
-
-    if (this.state.images.length === 0 && this.state.status === 'resolved') {
-      toast.error(
-        `Did not can  searched picture  on the search query "${nextSearchQuery}"`,
-      );
-
-      this.setState({ status: 'idle' });
-    }
   }
 
   render() {
-    const { status, images } = this.state;
+    const { status, images, loading } = this.state;
 
     if (status === 'idle') {
       return <></>;
@@ -86,7 +103,7 @@ export class ImageGallery extends Component {
           <ImageGalleryList>
             <ImageGalleryItem images={images} />
           </ImageGalleryList>
-          {images.length > 0 && <Button onClick={this.handleClickBtn} />}
+          {loading && <Button onClick={this.handleClickBtn} />}
         </>
       );
     }

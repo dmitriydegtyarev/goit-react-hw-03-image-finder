@@ -7,11 +7,11 @@ export const ImageGalleryItem = ({ images }) => {
   return (
     <>
       {images &&
-        images.map(image => {
+        images.map((image, idx) => {
           const { id, webformatURL, tags } = image;
           return (
-            <ImageGalleryItemLi key={id}>
-              <ImageGalleryItemImage src={webformatURL} alt={tags} />
+            <ImageGalleryItemLi key={idx}>
+              <ImageGalleryItemImage src={webformatURL} alt={tags} id={id} />
             </ImageGalleryItemLi>
           );
         })}
