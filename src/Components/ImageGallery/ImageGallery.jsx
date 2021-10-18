@@ -5,6 +5,7 @@ import { DefaultImage } from 'Components/ImageGalleryItem/DefaultImage';
 import { ImageGalleryItem } from 'Components/ImageGalleryItem';
 import { Spinner } from 'Components/Loader';
 import { Button } from 'Components/Button';
+import { Modal } from 'Components/Modal';
 
 import { ImageGalleryList } from './ImageGallery.styled';
 
@@ -16,10 +17,15 @@ export class ImageGallery extends Component {
   state = {
     images: [],
     page: 1,
-    totalImages: null,
-    loading: false,
+    responseTotalHits: null,
+    loadMore: false,
     status: 'idle',
+    imageSelected: null,
     error: null,
+  };
+
+  handleCloseModal = () => {
+    this.setState({ imageSelected: null });
   };
 
   handleClickBtn = () => {
@@ -37,12 +43,19 @@ export class ImageGallery extends Component {
     const prevSearchQuery = prevProps.searchQuery;
     const nextSearchQuery = this.props.searchQuery;
 
-    if (prevSearchQuery !== nextSearchQuery) {
-      this.setState({ status: 'pending', page: 1, loading: false });
+    const { page, responseTotalHits } = this.state;
 
-      fetchPictures(nextSearchQuery, this.state.page)
+    if (prevSearchQuery !== nextSearchQuery) {
+      this.setState({
+        status: 'pending',
+        page: 1,
+        loadMore: false,
+        images: [],
+      });
+
+      fetchPictures(nextSearchQuery, page)
         .then(data => {
-          this.setState({ totalImages: data.totalHits });
+          this.setState({ responseTotalHits: data.totalHits });
           return data.hits;
         })
         .then(images => {
@@ -54,21 +67,18 @@ export class ImageGallery extends Component {
             notify();
             return;
           }
-          this.setState({ images, status: 'resolved', loading: true });
+          this.setState({ images, status: 'resolved', loadMore: true });
         });
     }
 
-    if (
-      this.state.page !== prevState.page &&
-      prevSearchQuery === nextSearchQuery
-    ) {
+    if (page !== prevState.page && prevSearchQuery === nextSearchQuery) {
       this.setState({ status: 'pending' });
 
-      if (this.state.totalImages / 12 <= this.state.page) {
-        this.setState({ loading: false });
+      if (responseTotalHits / 12 <= page) {
+        this.setState({ loadMore: false });
       }
 
-      fetchPictures(nextSearchQuery, this.state.page)
+      fetchPictures(nextSearchQuery, page)
         .then(data => data.hits)
         .then(newImages =>
           this.setState(prevState => ({
@@ -85,7 +95,7 @@ export class ImageGallery extends Component {
   }
 
   render() {
-    const { status, images, loading } = this.state;
+    const { status, images, loadMore, imageSelected } = this.state;
 
     if (status === 'idle') {
       return (
@@ -111,7 +121,8 @@ export class ImageGallery extends Component {
           <ImageGalleryList>
             <ImageGalleryItem images={images} />
           </ImageGalleryList>
-          {loading && <Button onClick={this.handleClickBtn} />}
+          {loadMore && <Button onClick={this.handleClickBtn} />}
+          {imageSelected && <Modal onClick={this.handleCloseModal} />}
         </>
       );
     }

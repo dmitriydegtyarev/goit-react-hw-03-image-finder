@@ -1,6 +1,6 @@
 import {
   ImageGalleryItemLi,
-  ImageGalleryItemImage,
+  DefaultImageGalleryItemImage,
 } from './ImageGalleryItem.styled';
 
 export const DefaultImage = ({ data }) => {
@@ -11,7 +11,7 @@ export const DefaultImage = ({ data }) => {
           const { id, src, alt } = el;
           return (
             <ImageGalleryItemLi key={id}>
-              <ImageGalleryItemImage src={src} alt={alt} />
+              <DefaultImageGalleryItemImage src={src} alt={alt} />
             </ImageGalleryItemLi>
           );
         })}
