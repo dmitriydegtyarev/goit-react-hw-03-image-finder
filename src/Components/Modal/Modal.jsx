@@ -2,6 +2,8 @@ import { Component } from 'react';
 import { createPortal } from 'react-dom';
 import { GrFormClose } from 'react-icons/gr';
 
+import { Overlay, ImmageWrapper, CloseBtn } from './Modal.styled';
+
 const modalRoot = document.getElementById('modal-root');
 
 export class Modal extends Component {
@@ -27,14 +29,14 @@ export class Modal extends Component {
 
   render() {
     return createPortal(
-      <div className="Overlay">
-        <div className="Modal">
-          <img src="" alt="" />
-          <button type="button" onClick={this.props.onClick()}>
+      <Overlay onClick={this.handleBackdropClick}>
+        <ImmageWrapper>
+          <img src={this.props.src} alt={this.props.alt} />
+          <CloseBtn type="button" onClick={this.props.onClick}>
             <GrFormClose />
-          </button>
-        </div>
-      </div>,
+          </CloseBtn>
+        </ImmageWrapper>
+      </Overlay>,
       modalRoot,
     );
   }

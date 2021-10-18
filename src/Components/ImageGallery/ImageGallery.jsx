@@ -24,6 +24,10 @@ export class ImageGallery extends Component {
     error: null,
   };
 
+  handleSelectImage = image => {
+    this.setState({ imageSelected: image });
+  };
+
   handleCloseModal = () => {
     this.setState({ imageSelected: null });
   };
@@ -68,7 +72,8 @@ export class ImageGallery extends Component {
             return;
           }
           this.setState({ images, status: 'resolved', loadMore: true });
-        });
+        })
+        .catch(error => this.setState({ error, status: 'rejected' }));
     }
 
     if (page !== prevState.page && prevSearchQuery === nextSearchQuery) {
@@ -85,7 +90,8 @@ export class ImageGallery extends Component {
             images: [...prevState.images, ...newImages],
             status: 'resolved',
           })),
-        );
+        )
+        .catch(error => this.setState({ error, status: 'rejected' }));
     }
 
     window.scrollTo({
@@ -119,10 +125,19 @@ export class ImageGallery extends Component {
       return (
         <>
           <ImageGalleryList>
-            <ImageGalleryItem images={images} />
+            <ImageGalleryItem
+              images={images}
+              onClick={this.handleSelectImage}
+            />
           </ImageGalleryList>
           {loadMore && <Button onClick={this.handleClickBtn} />}
-          {imageSelected && <Modal onClick={this.handleCloseModal} />}
+          {imageSelected && (
+            <Modal
+              onClick={this.handleCloseModal}
+              src={imageSelected.largeImageURL}
+              alt={imageSelected.tags}
+            />
+          )}
         </>
       );
     }

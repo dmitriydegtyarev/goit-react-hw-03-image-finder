@@ -13,25 +13,19 @@ export const Overlay = styled.div`
   z-index: 1200;
 `;
 
-export const CurrentModal = styled.div`
+export const ImmageWrapper = styled.div`
   position: relative;
   max-width: calc(100vw - 48px);
   max-height: calc(100vh - 24px);
 `;
 
-export const Img = styled.img`
-  display: block;
-`;
-
 export const CloseBtn = styled.button`
   position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 1px;
+  height: 20px;
+  width: 20px;
+  top: 10px;
+  right: 10px;
   border: none;
+  border-radius: 50%;
   cursor: pointer;
-  &:hover,
-  &:focus {
-    background-color: #add8e6;
-  }
 `;

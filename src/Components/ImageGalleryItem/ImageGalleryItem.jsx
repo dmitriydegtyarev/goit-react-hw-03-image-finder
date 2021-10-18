@@ -3,7 +3,7 @@ import {
   ImageGalleryItemImage,
 } from './ImageGalleryItem.styled';
 
-export const ImageGalleryItem = ({ images }) => {
+export const ImageGalleryItem = ({ images, onClick }) => {
   return (
     <>
       {images &&
@@ -11,7 +11,12 @@ export const ImageGalleryItem = ({ images }) => {
           const { id, webformatURL, tags } = image;
           return (
             <ImageGalleryItemLi key={idx}>
-              <ImageGalleryItemImage src={webformatURL} alt={tags} id={id} />
+              <ImageGalleryItemImage
+                src={webformatURL}
+                alt={tags}
+                id={id}
+                onClick={() => onClick(image)}
+              />
             </ImageGalleryItemLi>
           );
         })}
